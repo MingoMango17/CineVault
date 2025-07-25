@@ -12,4 +12,3 @@ class Movie(models.Model):
             allowed_extensions=['mp4', 'webm', 'mkv']
         )]
     )
-
