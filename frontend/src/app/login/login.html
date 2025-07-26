@@ -1,0 +1,190 @@
+<div class="login-page">
+    <div class="login-form">
+        <div class="form-container">
+            @if (isSignIn()) {
+            <h1>Sign In</h1>
+
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" [(ngModel)]="loginData.email"
+                        placeholder="Email or phone number" required #email="ngModel"
+                        [class.error]="email.invalid && email.touched">
+                    @if (email.invalid && email.touched) {
+                    <div class="error-message">
+                        Please enter a valid email.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" name="password" [(ngModel)]="loginData.password"
+                        placeholder="Password" required minlength="6" #password="ngModel"
+                        [class.error]="password.invalid && password.touched">
+                    @if (password.invalid && password.touched) {
+                    <div class="error-message">
+                        Password must be at least 6 characters.
+                    </div>
+                    }
+                </div>
+
+                <button type="submit" class="sign-in-btn" [disabled]="loginForm.invalid">
+                    Sign In
+                </button>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </label>
+                    <a href="#" class="help-link">Need help?</a>
+                </div>
+            </form>
+
+            <div class="form-footer">
+                <p class="new-user">
+                    New to Netflix?
+                    <a href="#" class="sign-up-link" (click)="toggleMode($event)">Sign up now</a>
+                </p>
+                <p class="recaptcha-text">
+                    This page is protected by Google reCAPTCHA to ensure you're not a bot.
+                    <a href="#" class="learn-more">Learn more.</a>
+                </p>
+            </div>
+            } @else {
+            <h1>Sign Up</h1>
+
+            <form (ngSubmit)="onSignUp()" #signupForm="ngForm">
+                <div class="form-group">
+                    <input type="text" id="firstName" name="firstName" [(ngModel)]="signupData.firstName"
+                        placeholder="First Name" required #firstName="ngModel"
+                        [class.error]="firstName.invalid && firstName.touched">
+                    @if (firstName.invalid && firstName.touched) {
+                    <div class="error-message">
+                        First name is required.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="lastName" name="lastName" [(ngModel)]="signupData.lastName"
+                        placeholder="Last Name" required #lastName="ngModel"
+                        [class.error]="lastName.invalid && lastName.touched">
+                    @if (lastName.invalid && lastName.touched) {
+                    <div class="error-message">
+                        Last name is required.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="email" id="signupEmail" name="signupEmail" [(ngModel)]="signupData.email"
+                        placeholder="Email address" required email #signupEmail="ngModel"
+                        [class.error]="signupEmail.invalid && signupEmail.touched">
+                    @if (signupEmail.invalid && signupEmail.touched) {
+                    <div class="error-message">
+                        @if (signupEmail.errors?.['required']) {
+                        Email is required.
+                        } @else if (signupEmail.errors?.['email']) {
+                        Please enter a valid email address.
+                        }
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="signupPassword" name="signupPassword" [(ngModel)]="signupData.password"
+                        placeholder="Password" required minlength="8" #signupPassword="ngModel"
+                        [class.error]="signupPassword.invalid && signupPassword.touched">
+                    @if (signupPassword.invalid && signupPassword.touched) {
+                    <div class="error-message">
+                        @if (signupPassword.errors?.['required']) {
+                        Password is required.
+                        } @else if (signupPassword.errors?.['minlength']) {
+                        Password must be at least 8 characters long.
+                        }
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" name="confirmPassword"
+                        [(ngModel)]="signupData.confirmPassword" placeholder="Confirm Password" required
+                        #confirmPassword="ngModel"
+                        [class.error]="(confirmPassword.invalid && confirmPassword.touched) || (confirmPassword.value && signupData.password !== signupData.confirmPassword)">
+                    @if (confirmPassword.touched && signupData.password !== signupData.confirmPassword) {
+                    <div class="error-message">
+                        Passwords do not match.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" [(ngModel)]="signupData.phone"
+                        placeholder="Phone Number (Optional)" #phone="ngModel">
+                </div>
+
+                <div class="form-group">
+                    <select id="country" name="country" [(ngModel)]="signupData.country" required #country="ngModel"
+                        [class.error]="country.invalid && country.touched">
+                        <option value="" disabled>Select Country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="JP">Japan</option>
+                        <option value="KR">South Korea</option>
+                        <option value="PH">Philippines</option>
+                        <!-- Add more countries as needed -->
+                    </select>
+                    @if (country.invalid && country.touched) {
+                    <div class="error-message">
+                        Please select your country.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" [(ngModel)]="acceptTerms" name="acceptTerms" required #terms="ngModel">
+                        <span class="checkmark"></span>
+                        I agree to the <a href="#" class="terms-link">Terms of Use</a> and <a href="#"
+                            class="terms-link">Privacy Policy</a>
+                    </label>
+                    @if (terms.invalid && terms.touched) {
+                    <div class="error-message">
+                        You must accept the terms and conditions.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" [(ngModel)]="emailUpdates" name="emailUpdates">
+                        <span class="checkmark"></span>
+                        Send me Netflix special offers, product updates and other marketing communications.
+                    </label>
+                </div>
+
+                <button type="submit" class="sign-in-btn"
+                    [disabled]="signupForm.invalid || signupData.password !== signupData.confirmPassword">
+                    Sign Up
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p class="new-user">
+                    Already have an account?
+                    <a href="#" class="sign-up-link" (click)="toggleMode($event)">Sign in now</a>
+                </p>
+                <p class="recaptcha-text">
+                    This page is protected by Google reCAPTCHA to ensure you're not a bot.
+                    <a href="#" class="learn-more">Learn more.</a>
+                </p>
+            </div>
+            }
+        </div>
+    </div>
+</div>
