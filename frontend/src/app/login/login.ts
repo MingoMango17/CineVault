@@ -81,8 +81,7 @@ export class Login implements OnDestroy {
         .subscribe({
           next: (response) => {
             this.loading = false;
-            this.success =
-              'Logged In Successfully';
+            this.success = 'Logged In Successfully';
 
             this.router.navigate(['/']);
           },

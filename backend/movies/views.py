@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate
 from .models import Movie
@@ -18,7 +19,7 @@ class MovieViewSet(viewsets.ModelViewSet):
         return MovieDetailSerializer
 
     def get_permissions(self):
-        if self.action == "list" or "retrieve":
+        if self.action in ["list", "retrieve"]:
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]
@@ -115,7 +116,7 @@ class SignoutView(APIView):
 
     def post(self, request):
         try:
-            refresh_token = request.data.get("refresh")
+            refresh_token = request.data.get("refresh_token")
             if refresh_token:
                 token = RefreshToken(refresh_token)
                 token.blacklist()

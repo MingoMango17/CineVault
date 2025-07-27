@@ -13,6 +13,7 @@ import {
   Observable,
   throwError,
   tap,
+  of,
 } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -101,23 +102,34 @@ export class AuthService {
       );
   }
 
-  // Sign Out
-  signOut(): void {
-    this.http
-      .post(`${this.apiUrl}/signout`, {})
-      .pipe(
-        catchError((error) => {
-          console.error('Sign out error:', error);
-          return throwError(() => error);
-        })
-      )
-      .subscribe({
-        complete: () => {
-          this.clearAuthData();
-          this.currentUserSubject.next(null);
-          this.router.navigate(['/login']);
+  signOut(): Observable<any> {
+    const refreshToken = localStorage.getItem(this.refreshToken);
+    const accessToken = localStorage.getItem(this.accessToken); // Get access token
+
+    if (!refreshToken) {
+      this.clearAuthData();
+      this.currentUserSubject.next(null);
+      this.router.navigate(['/login']);
+      return of(true);
+    }
+
+    // Create proper auth headers with access token
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`, // Use access token for auth
+      'Content-Type': 'application/json',
+    });
+
+    return this.http
+      .post(
+        `${this.apiUrl}/signout`,
+        {
+          refresh_token: refreshToken, // Only refresh token in body
         },
-      });
+        { headers }
+      )
+      .pipe
+      // ... rest of your pipe logic
+      ();
   }
 
   // Get current user
@@ -250,7 +262,6 @@ export class AuthService {
       // Client-side error
       errorMessage = error.error.message;
     } else {
-      // Server-side error
       errorMessage = error.error?.message || `Server error: ${error.status}`;
     }
 

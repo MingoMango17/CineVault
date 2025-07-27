@@ -35,7 +35,7 @@ export class Header implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef // ADDED: For change detection
   ) {}
@@ -43,7 +43,7 @@ export class Header implements OnInit, OnDestroy {
   ngOnInit(): void {
     // IMPROVED: Better subscription handling
     this.subscribeToAuthState();
-    
+
     // Check initial auth state
     this.checkInitialAuthState();
   }
@@ -55,20 +55,18 @@ export class Header implements OnInit, OnDestroy {
 
   // IMPROVED: Better auth state subscription
   private subscribeToAuthState(): void {
-    this.authService.currentUser$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (user) => {
-          this.currentUser = user;
-          this.isLoggedIn = !!user && this.authService.isAuthenticated();
-          this.cdr.detectChanges(); // ADDED: Trigger change detection
-        },
-        error: (error) => {
-          console.error('Error in user subscription:', error);
-          this.isLoggedIn = false;
-          this.currentUser = null;
-        }
-      });
+    this.authService.currentUser$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        this.isLoggedIn = !!user && this.authService.isAuthenticated();
+        this.cdr.detectChanges(); // ADDED: Trigger change detection
+      },
+      error: (error) => {
+        console.error('Error in user subscription:', error);
+        this.isLoggedIn = false;
+        this.currentUser = null;
+      },
+    });
   }
 
   // IMPROVED: Better initial auth state check
@@ -77,8 +75,7 @@ export class Header implements OnInit, OnDestroy {
       // Force check authentication state
       const isAuthenticated = this.authService.isAuthenticated();
       const user = this.authService.getCurrentUser();
-      
-      
+
       this.isLoggedIn = isAuthenticated && !!user;
       this.currentUser = user;
       this.cdr.detectChanges(); // ADDED: Trigger change detection
@@ -109,7 +106,7 @@ export class Header implements OnInit, OnDestroy {
     if (this.showUserMenu) {
       const target = event.target as Element;
       const userMenuElement = document.querySelector('.user-menu');
-      
+
       // Only close if clicking outside the user menu
       if (userMenuElement && !userMenuElement.contains(target)) {
         this.showUserMenu = false;
@@ -126,14 +123,23 @@ export class Header implements OnInit, OnDestroy {
     }
   }
 
-  // IMPROVED: Better sign out handling
   onSignOut(): void {
     try {
-      this.authService.signOut();
-      this.showUserMenu = false;
-      this.isLoggedIn = false;
-      this.currentUser = null;
-      this.cdr.detectChanges();
+      this.authService.signOut().subscribe({
+        next: (result) => {
+          this.showUserMenu = false;
+          this.isLoggedIn = false;
+          this.currentUser = null;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Sign out failed:', error);
+          this.showUserMenu = false;
+          this.isLoggedIn = false;
+          this.currentUser = null;
+          this.cdr.detectChanges();
+        },
+      });
     } catch (error) {
       console.error('Sign out failed:', error);
     }
@@ -187,9 +193,7 @@ export class Header implements OnInit, OnDestroy {
 
   get userAvatar(): string | null {
     return (
-      this.currentUser?.avatar || 
-      this.currentUser?.profile_picture || 
-      null
+      this.currentUser?.avatar || this.currentUser?.profile_picture || null
     );
   }
 

@@ -6,7 +6,6 @@ export class UserRegister {
   password: string;
   confirmPassword: string;
 
-
   constructor() {
     this.username = '';
     this.email = '';
@@ -44,7 +43,7 @@ export class UserModel {
 }
 
 export class UserFetchResponse {
-    user?: UserModel;
-    tokens?: any;
-    message?: string;
+  user?: UserModel;
+  tokens?: any;
+  message?: string;
 }

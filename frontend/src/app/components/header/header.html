@@ -21,36 +21,36 @@
 
         <div class="header-right">
             @if (!isLoggedIn) {
-                <button class="sign-in-btn" (click)="onSignIn()">
-                    Sign In
-                </button>
+            <button class="sign-in-btn" (click)="onSignIn()">
+                Sign In
+            </button>
             } @else {
-                <div *ngIf="isLoggedIn" class="user-menu">
-                    <button class="user-avatar" (click)="toggleUserMenu()" [class.active]="showUserMenu">
-                        <img [src]="userAvatar || 'assets/images/default-avatar.png'" [alt]="userName + ' Avatar'">
-                    </button>
-    
-                    <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
-                        <div class="user-info">
-                            <span class="user-name">{{ userName || 'User' }}</span>
-                            <span class="user-email">{{ userEmail }}</span>
-                        </div>
-                        <hr class="dropdown-divider">
-                        <a class="dropdown-item" routerLink="/profile">
-                            <i class="icon-user"></i>
-                            Profile
-                        </a>
-                        <a class="dropdown-item" routerLink="/settings">
-                            <i class="icon-settings"></i>
-                            Settings
-                        </a>
-                        <hr class="dropdown-divider">
-                        <button class="dropdown-item logout-btn" (click)="onSignOut()">
-                            <i class="icon-logout"></i>
-                            Sign Out
-                        </button>
+            <div *ngIf="isLoggedIn" class="user-menu">
+                <button class="user-avatar" (click)="toggleUserMenu()" [class.active]="showUserMenu">
+                    <img [src]="userAvatar || 'default-avatar.png'" [alt]="userName + ' Avatar'">
+                </button>
+
+                <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+                    <div class="user-info">
+                        <span class="user-name">{{ userName || 'User' }}</span>
+                        <span class="user-email">{{ userEmail }}</span>
                     </div>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item" routerLink="/profile">
+                        <i class="icon-user"></i>
+                        Profile
+                    </a>
+                    <a class="dropdown-item" routerLink="/settings">
+                        <i class="icon-settings"></i>
+                        Settings
+                    </a>
+                    <hr class="dropdown-divider">
+                    <button class="dropdown-item logout-btn" (click)="onSignOut()">
+                        <i class="icon-logout"></i>
+                        Sign Out
+                    </button>
                 </div>
+            </div>
             }
 
         </div>
