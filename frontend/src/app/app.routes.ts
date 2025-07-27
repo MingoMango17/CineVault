@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth-guard';
+import { authGuard, loginGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -15,6 +15,7 @@ export const routes: Routes = [
     loadComponent() {
       return import('./pages/login/login').then((m) => m.Login);
     },
+    canActivate: [loginGuard],
   },
   {
     path: 'upload',

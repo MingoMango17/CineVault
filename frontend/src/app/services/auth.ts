@@ -123,13 +123,17 @@ export class AuthService {
       .post(
         `${this.apiUrl}/signout`,
         {
-          refresh_token: refreshToken, // Only refresh token in body
+          refresh_token: refreshToken,
         },
         { headers }
       )
-      .pipe
-      // ... rest of your pipe logic
-      ();
+      .pipe(
+        tap(() => {
+          this.clearAuthData();
+          this.currentUserSubject.next(null);
+          this.router.navigate(['/login']);
+        })
+      );
   }
 
   // Get current user
