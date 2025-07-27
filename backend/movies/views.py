@@ -1,18 +1,102 @@
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
+
+from django.contrib.auth import authenticate
 from .models import Movie
-from .serializers import MovieListSerializer, MovieDetailSerializer
+from .serializers import *
+
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return MovieListSerializer
         return MovieDetailSerializer
 
     def get_permissions(self):
-        if self.action == 'list' or 'retrieve':
+        if self.action == "list" or "retrieve":
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+
+class SignupView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = SignupSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+
+            return Response(
+                {
+                    "message": "User created successfully",
+                    "user": SignupSerializer(user).data,
+                    "tokens": {
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    },
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SigninView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = SigninSerializer(data=request.data)
+        if serializer.is_valid():
+            username_or_email = serializer.validated_data["username_or_email"]
+            password = serializer.validated_data["password"]
+
+            user = None
+            if "@" in username_or_email:
+                try:
+                    user_obj = User.objects.get(email=username_or_email)
+                    user = authenticate(username=user_obj.username, password=password)
+                except User.DoesNotExist:
+                    pass
+            else:
+                user = authenticate(username=username_or_email, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    refresh = RefreshToken.for_user(user)
+                    return Response(
+                        {
+                            "message": "Sign in successful",
+                            "user": {
+                                "id": user.id,
+                                "username": user.username,
+                                "email": user.email,
+                                "first_name": user.first_name,
+                                "last_name": user.last_name,
+                            },
+                            "tokens": {
+                                "refresh": str(refresh),
+                                "access": str(refresh.access_token),
+                            },
+                        },
+                        status=status.HTTP_200_OK,
+                    )
+                else:
+                    return Response(
+                        {"error": "Account is disabled"},
+                        status=status.HTTP_401_UNAUTHORIZED,
+                    )
+            else:
+                return Response(
+                    {"error": "Invalid credentials"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
