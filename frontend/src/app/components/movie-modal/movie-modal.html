@@ -1,0 +1,112 @@
+<div class="modal-overlay" id="movieModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <img class="modal-backdrop" id="modalBackdrop" src="" alt="Movie Backdrop">
+            <div class="modal-gradient"></div>
+            <button class="close-btn" onclick="closeMovieModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="movie-details-header">
+                <img class="movie-poster-large" id="modalPoster" src="" alt="Movie Poster">
+                <div class="movie-meta">
+                    <h1 class="movie-title-large" id="modalTitle">Movie Title</h1>
+                    <p class="movie-subtitle" id="modalSubtitle">Director Name</p>
+
+                    <div class="movie-stats">
+                        <span class="match-rating" id="modalMatch">95% Match</span>
+                        <span class="year" id="modalYear">2024</span>
+                        <span class="duration" id="modalDuration">2h 15m</span>
+                        <span class="rating-badge" id="modalRating">PG-13</span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-play" onclick="playMovie()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                            Play
+                        </button>
+                        <button class="btn-secondary" onclick="addToList()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            My List
+                        </button>
+                        <button class="btn-icon-only" onclick="likeMovie()" title="Like">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
+                                </path>
+                            </svg>
+                        </button>
+                        <button class="btn-icon-only" onclick="shareMovie()" title="Share">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="movie-description" id="modalDescription">
+                Loading movie description...
+            </p>
+
+            <div class="movie-details-grid">
+                <div class="detail-section">
+                    <h3>Movie Info</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Director:</span>
+                        <span class="detail-value" id="modalDirector">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Cast:</span>
+                        <span class="detail-value" id="modalCast">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Writer:</span>
+                        <span class="detail-value" id="modalWriter">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Genres:</span>
+                        <div class="genre-tags" id="modalGenres"></div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Additional Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Language:</span>
+                        <span class="detail-value" id="modalLanguage">English</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Country:</span>
+                        <span class="detail-value" id="modalCountry">United States</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Released:</span>
+                        <span class="detail-value" id="modalReleaseDate">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Budget:</span>
+                        <span class="detail-value" id="modalBudget">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
