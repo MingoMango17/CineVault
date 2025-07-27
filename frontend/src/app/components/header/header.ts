@@ -131,9 +131,9 @@ export class Header implements OnInit, OnDestroy {
     try {
       this.authService.signOut();
       this.showUserMenu = false;
-      this.isLoggedIn = false; // ADDED: Immediate state update
-      this.currentUser = null; // ADDED: Immediate state update
-      this.cdr.detectChanges(); // ADDED: Trigger change detection
+      this.isLoggedIn = false;
+      this.currentUser = null;
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Sign out failed:', error);
     }

@@ -19,12 +19,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 from movies.urls import router as movie_router
-from movies.views import SignupView, SigninView
+from movies.views import SignupView, SigninView, SignoutView
 
 urlpatterns = [
     path("api/v1/", include(movie_router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("auth/signup", SignupView.as_view(), name="sign-up"),
     path("auth/signin", SigninView.as_view(), name="sign-in"),
+    path("auth/signout", SignoutView.as_view(), name="sign-out"),
     path("admin/", admin.site.urls),
 ]

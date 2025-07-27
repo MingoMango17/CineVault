@@ -47,7 +47,6 @@ export class AuthService {
       const token = this.getStoredToken();
       const user = this.getStoredUser();
 
-
       if (token && user) {
         // Verify token is not expired before setting user
         if (!this.isTokenExpired(token)) {
@@ -65,7 +64,6 @@ export class AuthService {
 
   // Sign Up
   signUp(request: UserRegister): Observable<UserFetchResponse> {
-
     return this.http
       .post<UserFetchResponse>(`${this.apiUrl}/signup`, request)
       .pipe(
@@ -87,7 +85,6 @@ export class AuthService {
 
   // Sign In
   signIn(request: UserLogin): Observable<UserFetchResponse> {
-
     return this.http
       .post<UserFetchResponse>(`${this.apiUrl}/signin`, request)
       .pipe(
@@ -106,9 +103,21 @@ export class AuthService {
 
   // Sign Out
   signOut(): void {
-    this.clearAuthData();
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    this.http
+      .post(`${this.apiUrl}/signout`, {})
+      .pipe(
+        catchError((error) => {
+          console.error('Sign out error:', error);
+          return throwError(() => error);
+        })
+      )
+      .subscribe({
+        complete: () => {
+          this.clearAuthData();
+          this.currentUserSubject.next(null);
+          this.router.navigate(['/login']);
+        },
+      });
   }
 
   // Get current user
