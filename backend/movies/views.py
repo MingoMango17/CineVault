@@ -29,7 +29,13 @@ class SignupView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = SignupSerializer(data=request.data)
+        data = request.data.copy()
+
+        data["password_confirm"] = data.get("confirmPassword", None)
+        data["first_name"] = data.get("firstName", None)
+        data["last_name"] = data.get("lastName", None)
+
+        serializer = SignupSerializer(data=data)
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
