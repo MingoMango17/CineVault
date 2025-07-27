@@ -4,5 +4,5 @@ from .models import Movie
 # Register your models here.
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_fields = ("title", "date_added")
+    list_display = ("title", "date_released", "duration", "director")
     readonly_fields = ("date_added",)

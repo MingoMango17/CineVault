@@ -6,15 +6,15 @@ from django.contrib.auth.models import User
 class MovieDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ["id", "title", "description", "date_added", "video_file"]
+        # fields = ["id", "title", "description", "date_added", "video_file", "date_released", "duration"]
+        fields = '__all__'
         read_only_fields = ["date_added"]
 
 
 class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ["id", "title", "date_added"]
-        read_only_fields = ["date_added"]
+        fields = ["id", "title", "date_released"]
 
 
 class SignupSerializer(serializers.ModelSerializer):
