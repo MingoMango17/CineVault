@@ -1,22 +1,58 @@
-<header>
+<!-- header.html -->
+<header #header>
     <div class="header-content">
         <div class="header-left">
-            <a href="">
+            <a routerLink="/">
                 <div class="header-logo">
                     <img src="new-logo.png" alt="Logo">
                 </div>
             </a>
-            <nav class="main-nav">
-                <!-- <a href="login" class="nav-item active">Home</a>
-                <a href="#" class="nav-item">TV Shows</a>
-                <a href="#" class="nav-item">Movies</a>
-                <a href="#" class="nav-item">New & Popular</a>
-                <a href="#" class="nav-item">My List</a>
-                <a href="#" class="nav-item">Browse by Languages</a> -->
 
-                <a href="#" class="nav-item">Home</a>
-                <a href="login" class="nav-item">Upload</a>
+            <!-- Navigation only shows when user is logged in -->
+            <nav class="main-nav" *ngIf="isLoggedIn">
+                <a routerLink="/" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    Home
+                </a>
+                <a routerLink="/upload" class="nav-item" routerLinkActive="active">
+                    Upload
+                </a>
             </nav>
+        </div>
+
+        <div class="header-right">
+            @if (!isLoggedIn) {
+                <button class="sign-in-btn" (click)="onSignIn()">
+                    Sign In
+                </button>
+            } @else {
+                <div *ngIf="isLoggedIn" class="user-menu">
+                    <button class="user-avatar" (click)="toggleUserMenu()" [class.active]="showUserMenu">
+                        <img [src]="userAvatar || 'assets/images/default-avatar.png'" [alt]="userName + ' Avatar'">
+                    </button>
+    
+                    <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+                        <div class="user-info">
+                            <span class="user-name">{{ userName || 'User' }}</span>
+                            <span class="user-email">{{ userEmail }}</span>
+                        </div>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item" routerLink="/profile">
+                            <i class="icon-user"></i>
+                            Profile
+                        </a>
+                        <a class="dropdown-item" routerLink="/settings">
+                            <i class="icon-settings"></i>
+                            Settings
+                        </a>
+                        <hr class="dropdown-divider">
+                        <button class="dropdown-item logout-btn" (click)="onSignOut()">
+                            <i class="icon-logout"></i>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 </header>

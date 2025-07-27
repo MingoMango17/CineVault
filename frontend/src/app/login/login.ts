@@ -1,5 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UserLogin, UserRegister } from '../model/user.model';
+import { AuthService } from '../services/auth';
+import { Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -7,26 +11,30 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnDestroy {
   private signInMode = true;
+  private destroy$ = new Subject<void>();
 
-  loginData = {
-    email: '',
-    password: '',
-  };
+  loginData = new UserLogin();
   rememberMe = false;
 
-  signupData = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phone: '',
-    country: '',
-  };
+  signupData = new UserRegister();
   acceptTerms = false;
-  emailUpdates = false;
+
+  error = '';
+  success = 'false';
+  returnUrl = '';
+  loading = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    // Get return URL from route parameters or default to dashboard
+    this.returnUrl =
+      this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+  }
 
   isSignIn(): boolean {
     return this.signInMode;
@@ -47,60 +55,82 @@ export class Login {
     this.rememberMe = false;
 
     this.signupData = {
+      username: '',
       firstName: '',
       lastName: '',
       email: '',
       password: '',
       confirmPassword: '',
-      phone: '',
-      country: '',
     };
     this.acceptTerms = false;
-    this.emailUpdates = false;
   }
 
   onSubmit(): void {
     if (this.loginData.email && this.loginData.password) {
-      console.log('Sign In attempt:', {
+      this.loading = true;
+      this.clearMessages();
+
+      const signinRequest = {
         email: this.loginData.email,
         password: this.loginData.password,
-        rememberMe: this.rememberMe,
-      });
+      };
 
-      // TODO: Call your authentication service
-      // this.authService.signIn(this.loginData).subscribe(
-      //   response => {
-      //     console.log('Sign in successful', response);
-      //     // Redirect to dashboard or home page
-      //   },
-      //   error => {
-      //     console.error('Sign in failed', error);
-      //     // Show error message to user
-      //   }
-      // );
+      this.authService
+        .signIn(signinRequest)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.loading = false;
+            this.success =
+              'Logged In Successfully';
+
+            this.router.navigate(['/']);
+          },
+          error: (error) => {
+            this.loading = false;
+            this.error = error.message || 'Sign in failed. Please try again.';
+            console.error('Sign in failed', error);
+          },
+        });
     }
   }
 
   onSignUp(): void {
-    if (this.isValidSignUp()) {
-      console.log('Sign Up attempt:', {
-        ...this.signupData,
-        acceptTerms: this.acceptTerms,
-        emailUpdates: this.emailUpdates,
-      });
-
-      // TODO: Call your registration service
-      // this.authService.signUp(this.signupData).subscribe(
-      //   response => {
-      //     console.log('Sign up successful', response);
-      //     // Show success message or redirect to verification page
-      //   },
-      //   error => {
-      //     console.error('Sign up failed', error);
-      //     // Show error message to user
-      //   }
-      // );
+    if (!this.isValidSignUp()) {
+      this.error = 'Please fill in all required fields correctly.';
+      return;
     }
+
+    this.loading = true;
+    this.clearMessages();
+
+    // Create the signup request object
+    const signupRequest = {
+      username: this.signupData.username,
+      firstName: this.signupData.firstName,
+      lastName: this.signupData.lastName,
+      email: this.signupData.email,
+      password: this.signupData.password,
+      confirmPassword: this.signupData.confirmPassword,
+    };
+
+    this.authService
+      .signUp(signupRequest)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.loading = false;
+          this.success =
+            'Account created successfully! Redirecting to dashboard...';
+
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.error = error.message || 'Sign up failed. Please try again.';
+          console.error('Sign up failed', error);
+        },
+      });
   }
 
   private isValidSignUp(): boolean {
@@ -110,9 +140,17 @@ export class Login {
       this.signupData.email &&
       this.signupData.password &&
       this.signupData.confirmPassword &&
-      this.signupData.country &&
-      this.signupData.password === this.signupData.confirmPassword &&
-      this.acceptTerms
+      this.signupData.password === this.signupData.confirmPassword
     );
+  }
+
+  private clearMessages(): void {
+    this.error = '';
+    this.success = '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

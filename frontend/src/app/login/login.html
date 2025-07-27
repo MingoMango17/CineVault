@@ -43,7 +43,7 @@
 
             <div class="form-footer">
                 <p class="new-user">
-                    New to Netflix?
+                    New to CineVault?
                     <a href="#" class="sign-up-link" (click)="toggleMode($event)">Sign up now</a>
                 </p>
                 <p class="recaptcha-text">
@@ -73,6 +73,21 @@
                     @if (lastName.invalid && lastName.touched) {
                     <div class="error-message">
                         Last name is required.
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <input type="username" id="signupUsername" name="signupUsername" [(ngModel)]="signupData.username"
+                        placeholder="Username" required email #signupUsername="ngModel"
+                        [class.error]="signupUsername.invalid && signupUsername.touched">
+                    @if (signupUsername.invalid && signupUsername.touched) {
+                    <div class="error-message">
+                        @if (signupUsername.errors?.['required']) {
+                        Email is required.
+                        } @else if (signupUsername.errors?.['username']) {
+                        Please enter a valid username.
+                        }
                     </div>
                     }
                 </div>
@@ -119,57 +134,8 @@
                     }
                 </div>
 
-                <div class="form-group">
-                    <input type="tel" id="phone" name="phone" [(ngModel)]="signupData.phone"
-                        placeholder="Phone Number (Optional)" #phone="ngModel">
-                </div>
-
-                <div class="form-group">
-                    <select id="country" name="country" [(ngModel)]="signupData.country" required #country="ngModel"
-                        [class.error]="country.invalid && country.touched">
-                        <option value="" disabled>Select Country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="GB">United Kingdom</option>
-                        <option value="AU">Australia</option>
-                        <option value="DE">Germany</option>
-                        <option value="FR">France</option>
-                        <option value="JP">Japan</option>
-                        <option value="KR">South Korea</option>
-                        <option value="PH">Philippines</option>
-                        <!-- Add more countries as needed -->
-                    </select>
-                    @if (country.invalid && country.touched) {
-                    <div class="error-message">
-                        Please select your country.
-                    </div>
-                    }
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" [(ngModel)]="acceptTerms" name="acceptTerms" required #terms="ngModel">
-                        <span class="checkmark"></span>
-                        I agree to the <a href="#" class="terms-link">Terms of Use</a> and <a href="#"
-                            class="terms-link">Privacy Policy</a>
-                    </label>
-                    @if (terms.invalid && terms.touched) {
-                    <div class="error-message">
-                        You must accept the terms and conditions.
-                    </div>
-                    }
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" [(ngModel)]="emailUpdates" name="emailUpdates">
-                        <span class="checkmark"></span>
-                        Send me Netflix special offers, product updates and other marketing communications.
-                    </label>
-                </div>
-
                 <button type="submit" class="sign-in-btn"
-                    [disabled]="signupForm.invalid || signupData.password !== signupData.confirmPassword">
+                    [disabled]="signupData.password !== signupData.confirmPassword">
                     Sign Up
                 </button>
             </form>
@@ -178,10 +144,6 @@
                 <p class="new-user">
                     Already have an account?
                     <a href="#" class="sign-up-link" (click)="toggleMode($event)">Sign in now</a>
-                </p>
-                <p class="recaptcha-text">
-                    This page is protected by Google reCAPTCHA to ensure you're not a bot.
-                    <a href="#" class="learn-more">Learn more.</a>
                 </p>
             </div>
             }
