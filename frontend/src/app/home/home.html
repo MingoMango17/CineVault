@@ -1,3 +1,236 @@
 <div class="home-page">
+    <main class="main-content">
+        <!-- Empty State Message (hidden by default, show when no movies) -->
+        <div class="empty-state" >
+            <div class="empty-state-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                    <circle cx="12" cy="10" r="3" />
+                </svg>
+            </div>
+            <h2 class="empty-state-title">No Movies Available</h2>
+            <p class="empty-state-description">Your movie library is empty. Start building your collection by adding
+                some movies.</p>
+            <button class="add-movie-btn">Add Movies Now</button>
+        </div>
+
+        <div class="movie-grid">
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1489599843821-e4a7f3b35d9a?w=200&h=112&fit=crop"
+                    alt="Action Movie">
+                <div class="movie-overlay">
+                    <div class="movie-title">Thunder Strike</div>
+                    <div class="movie-info">
+                        <span class="rating">95% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=200&h=112&fit=crop" alt="Drama">
+                <div class="movie-overlay">
+                    <div class="movie-title">City Lights</div>
+                    <div class="movie-info">
+                        <span class="rating">89% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200&h=112&fit=crop"
+                    alt="Sci-Fi">
+                <div class="movie-overlay">
+                    <div class="movie-title">Space Odyssey</div>
+                    <div class="movie-info">
+                        <span class="rating">92% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=200&h=112&fit=crop"
+                    alt="Horror">
+                <div class="movie-overlay">
+                    <div class="movie-title">Dark Woods</div>
+                    <div class="movie-info">
+                        <span class="rating">87% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=200&h=112&fit=crop"
+                    alt="Comedy">
+                <div class="movie-overlay">
+                    <div class="movie-title">Laugh Out Loud</div>
+                    <div class="movie-info">
+                        <span class="rating">91% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=112&fit=crop"
+                    alt="Romance">
+                <div class="movie-overlay">
+                    <div class="movie-title">Love Story</div>
+                    <div class="movie-info">
+                        <span class="rating">85% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=200&h=112&fit=crop"
+                    alt="Adventure">
+                <div class="movie-overlay">
+                    <div class="movie-title">Mountain Quest</div>
+                    <div class="movie-info">
+                        <span class="rating">88% Match</span>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=200&h=112&fit=crop"
+                    alt="Thriller">
+                <div class="movie-overlay">
+                    <div class="movie-title">Night Chase</div>
+                    <div class="movie-info">
+                        <span class="rating">93% Match</span>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=200&h=112&fit=crop"
+                    alt="Fantasy">
+                <div class="movie-overlay">
+                    <div class="movie-title">Magic Realm</div>
+                    <div class="movie-info">
+                        <span class="rating">90% Match</span>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=112&fit=crop" alt="War">
+                <div class="movie-overlay">
+                    <div class="movie-title">Battlefield</div>
+                    <div class="movie-info">
+                        <span class="rating">86% Match</span>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1608467493040-0288ab1b4f93?w=200&h=112&fit=crop"
+                    alt="Mystery">
+                <div class="movie-overlay">
+                    <div class="movie-title">Hidden Secrets</div>
+                    <div class="movie-info">
+                        <span class="rating">89% Match</span>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=200&h=112&fit=crop"
+                    alt="Western">
+                <div class="movie-overlay">
+                    <div class="movie-title">Wild West</div>
+                    <div class="movie-info">
+                        <span class="rating">84% Match</span>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1512149177596-f817c7ef5d4c?w=200&h=112&fit=crop"
+                    alt="Documentary">
+                <div class="movie-overlay">
+                    <div class="movie-title">Ocean Depths</div>
+                    <div class="movie-info">
+                        <span class="rating">95% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=200&h=112&fit=crop"
+                    alt="Animation">
+                <div class="movie-overlay">
+                    <div class="movie-title">Cartoon Adventures</div>
+                    <div class="movie-info">
+                        <span class="rating">91% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1478720568477-b0ac8b46d71b?w=200&h=112&fit=crop" alt="Crime">
+                <div class="movie-overlay">
+                    <div class="movie-title">City Underground</div>
+                    <div class="movie-info">
+                        <span class="rating">87% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=200&h=112&fit=crop"
+                    alt="Biography">
+                <div class="movie-overlay">
+                    <div class="movie-title">Life Story</div>
+                    <div class="movie-info">
+                        <span class="rating">93% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1489599843821-e4a7f3b35d9a?w=200&h=112&fit=crop"
+                    alt="Sports">
+                <div class="movie-overlay">
+                    <div class="movie-title">Championship</div>
+                    <div class="movie-info">
+                        <span class="rating">88% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            <div class="movie-card">
+                <img class="movie-poster"
+                    src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=200&h=112&fit=crop"
+                    alt="Family">
+                <div class="movie-overlay">
+                    <div class="movie-title">Family Time</div>
+                    <div class="movie-info">
+                        <span class="rating">90% Match</span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
 </div>
