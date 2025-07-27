@@ -59,7 +59,10 @@ class SigninView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = SigninSerializer(data=request.data)
+        data = request.data.copy()
+
+        data["username_or_email"] = data.get("email", None)
+        serializer = SigninSerializer(data=data)
         if serializer.is_valid():
             username_or_email = serializer.validated_data["username_or_email"]
             password = serializer.validated_data["password"]
