@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserLogin, UserRegister } from '../model/user.model';
-import { AuthService } from '../services/auth';
+import { UserLogin, UserRegister } from '../../model/user.model';
+import { AuthService } from '../../services/auth';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 

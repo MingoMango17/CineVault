@@ -5,7 +5,7 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         loadComponent: () => {
-            return import('./home/home').then(
+            return import('./pages/home/home').then(
                 (m) => m.Home
             )
         }
@@ -13,8 +13,16 @@ export const routes: Routes = [
     {
         path: 'login',
         loadComponent() {
-            return import('./login/login').then(
+            return import('./pages/login/login').then(
                 (m) => m.Login
+            )
+        },
+    },
+    {
+        path: 'upload',
+        loadComponent() {
+            return import('./pages/upload/upload').then(
+                (m) => m.Upload
             )
         },
     }
