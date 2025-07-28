@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit, OnDestroy {
-  movies: SimpleMovieDetails[] = [];
+  movies = signal<SimpleMovieDetails[]>([]);
   movieService = inject(MovieService);
   private destroy$ = new Subject<void>();
   loading = false;
@@ -53,7 +53,8 @@ export class Home implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (movies) => {
-          this.movies = movies;
+          this.movies.set(movies);
+          console.log('this.movies', this.movies());
           this.loading = false;
         },
         error: (error) => {
@@ -105,8 +106,11 @@ export class Home implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (movie) => {
-          console.log('deleted')
+          console.log('deleted');
           this.loading = false;
+          this.movies.update((current) =>
+            current.filter((movie) => movie.id !== movieId)
+          );
           this.router.navigate([this.router.url]);
         },
         error: (error) => {

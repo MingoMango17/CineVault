@@ -1,14 +1,11 @@
 <div class="home-page">
     <main class="main-content">
         <!-- Empty State Message (hidden by default, show when no movies) -->
-        @if (movies.length) {
+        @if (movies().length) {
         <div class="movie-grid">
-            <!-- <app-movie-card [movieTitle]="'Thunder Strike'" [movieYear]="'2024'"
-                [moviePoster]="'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=200&h=112&fit=crop'" /> -->
-
-            @for (movie of movies; track $index) {
-            <app-movie-card [movieTitle]="movie.movieTitle" [movieYear]="movie.movieYear"
-                [moviePoster]="movie.moviePoster || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=200&h=112&fit=crop'"
+            @for (movie of movies(); track $index) {
+            <app-movie-card [movieTitle]="movie.title" [movieYear]="movie.year_released"
+                [moviePoster]="movie.thumbnail	 || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=200&h=112&fit=crop'"
                 (click)="openMovieModal(movie.id)" />
             }
         </div>

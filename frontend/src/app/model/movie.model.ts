@@ -1,14 +1,14 @@
 export class SimpleMovieDetails{
   id: number;
-  movieTitle: string;
-  movieYear: number;
-  moviePoster: string;
+  title: string;
+  year_released: number;
+  thumbnail: string;
 
   constructor() {
     this.id = 1;
-    this.movieTitle = '';
-    this.movieYear = 0;
-    this.moviePoster = '';
+    this.title = '';
+    this.year_released = 0;
+    this.thumbnail = '';
   }
 }
 

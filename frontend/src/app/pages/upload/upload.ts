@@ -1,7 +1,20 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MovieService } from '../../services/movie-service';
+import { Route, Router } from '@angular/router';
 
 interface UploadedFile {
   file: File;
@@ -16,7 +29,7 @@ interface UploadedFile {
   selector: 'app-upload',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './upload.html',
-  styleUrl: './upload.scss'
+  styleUrl: './upload.scss',
 })
 export class Upload implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -33,7 +46,8 @@ export class Upload implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -53,7 +67,7 @@ export class Upload implements OnInit, OnDestroy {
       duration: ['', Validators.min(1)],
       director: [''],
       description: [''],
-      posterUrl: ['']
+      posterUrl: [''],
     });
   }
 
@@ -62,8 +76,14 @@ export class Upload implements OnInit, OnDestroy {
     setTimeout(() => {
       if (this.uploadSection) {
         const uploadSectionEl = this.uploadSection.nativeElement;
-        uploadSectionEl.addEventListener('dragover', this.handleDragOver.bind(this));
-        uploadSectionEl.addEventListener('dragleave', this.handleDragLeave.bind(this));
+        uploadSectionEl.addEventListener(
+          'dragover',
+          this.handleDragOver.bind(this)
+        );
+        uploadSectionEl.addEventListener(
+          'dragleave',
+          this.handleDragLeave.bind(this)
+        );
         uploadSectionEl.addEventListener('drop', this.handleDrop.bind(this));
       }
     });
@@ -111,7 +131,7 @@ export class Upload implements OnInit, OnDestroy {
   }
 
   private processFiles(files: File[]) {
-    const videoFiles = files.filter(file => file.type.startsWith('video/'));
+    const videoFiles = files.filter((file) => file.type.startsWith('video/'));
     const maxSize = 5 * 1024 * 1024 * 1024; // 5GB in bytes
 
     if (videoFiles.length === 0) {
@@ -121,7 +141,7 @@ export class Upload implements OnInit, OnDestroy {
 
     // Only take the first file and clear any existing files
     const file = videoFiles[0];
-    
+
     if (file.size > maxSize) {
       alert(`File ${file.name} is too large. Maximum size is 5GB.`);
       return;
@@ -136,7 +156,7 @@ export class Upload implements OnInit, OnDestroy {
       name: file.name,
       size: this.formatFileSize(file.size),
       progress: 0,
-      status: 'uploading'
+      status: 'uploading',
     };
 
     this.uploadedFilesList.push(uploadedFile);
@@ -173,7 +193,9 @@ export class Upload implements OnInit, OnDestroy {
   private renderFilesList() {
     if (!this.filesList) return;
 
-    const filesListHtml = this.uploadedFilesList.map(file => `
+    const filesListHtml = this.uploadedFilesList
+      .map(
+        (file) => `
       <div class="file-item" data-id="${file.id}">
         <div class="file-info">
           <div class="file-name">${file.name}</div>
@@ -185,7 +207,9 @@ export class Upload implements OnInit, OnDestroy {
           </div>
           <div class="progress-text">${Math.round(file.progress)}%</div>
         </div>
-        <button class="remove-file-btn" onclick="window.uploadComponent.removeFile('${file.id}')" 
+        <button class="remove-file-btn" onclick="window.uploadComponent.removeFile('${
+          file.id
+        }')" 
                 ${file.status === 'uploading' ? 'disabled' : ''}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -193,23 +217,34 @@ export class Upload implements OnInit, OnDestroy {
           </svg>
         </button>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
     this.filesList.nativeElement.innerHTML = filesListHtml;
-    
+
     // Make component accessible globally for button callbacks
     (window as any).uploadComponent = this;
   }
 
   private updateFileProgress(uploadedFile: UploadedFile) {
-    const fileElement = this.filesList?.nativeElement.querySelector(`[data-id="${uploadedFile.id}"]`);
+    const fileElement = this.filesList?.nativeElement.querySelector(
+      `[data-id="${uploadedFile.id}"]`
+    );
     if (fileElement) {
-      const progressFill = fileElement.querySelector('.progress-fill') as HTMLElement;
-      const progressText = fileElement.querySelector('.progress-text') as HTMLElement;
-      const removeBtn = fileElement.querySelector('.remove-file-btn') as HTMLButtonElement;
+      const progressFill = fileElement.querySelector(
+        '.progress-fill'
+      ) as HTMLElement;
+      const progressText = fileElement.querySelector(
+        '.progress-text'
+      ) as HTMLElement;
+      const removeBtn = fileElement.querySelector(
+        '.remove-file-btn'
+      ) as HTMLButtonElement;
 
       if (progressFill) progressFill.style.width = `${uploadedFile.progress}%`;
-      if (progressText) progressText.textContent = `${Math.round(uploadedFile.progress)}%`;
+      if (progressText)
+        progressText.textContent = `${Math.round(uploadedFile.progress)}%`;
       if (removeBtn && uploadedFile.status === 'completed') {
         removeBtn.disabled = false;
       }
@@ -217,13 +252,15 @@ export class Upload implements OnInit, OnDestroy {
   }
 
   removeFile(fileId: string) {
-    this.uploadedFilesList = this.uploadedFilesList.filter(file => file.id !== fileId);
+    this.uploadedFilesList = this.uploadedFilesList.filter(
+      (file) => file.id !== fileId
+    );
     this.renderFilesList();
-    
+
     // Clear video preview
     this.clearVideoPreview();
     this.currentVideoFile = null;
-    
+
     if (this.uploadedFilesList.length === 0) {
       if (this.uploadedFiles) {
         this.uploadedFiles.nativeElement.style.display = 'none';
@@ -231,11 +268,10 @@ export class Upload implements OnInit, OnDestroy {
     }
   }
 
-
   private createVideoPreview(file: File) {
     // Clean up previous preview URL
     this.clearVideoPreview();
-    
+
     // Create new preview URL
     this.videoPreviewUrl = URL.createObjectURL(file);
   }
@@ -262,29 +298,47 @@ export class Upload implements OnInit, OnDestroy {
 
       // Create FormData object for file upload
       const formData = new FormData();
-      
+
       // Append form fields (using snake_case to match Django model fields)
       formData.append('title', this.movieForm.get('title')?.value || '');
-      formData.append('releaseYear', this.movieForm.get('releaseYear')?.value?.toString() || '');
-      formData.append('duration', this.movieForm.get('duration')?.value?.toString() || '');
+      formData.append(
+        'releaseYear',
+        this.movieForm.get('releaseYear')?.value?.toString() || ''
+      );
+      formData.append(
+        'duration',
+        this.movieForm.get('duration')?.value?.toString() || ''
+      );
       formData.append('director', this.movieForm.get('director')?.value || '');
-      formData.append('description', this.movieForm.get('description')?.value || '');
-      formData.append('posterUrl', this.movieForm.get('posterUrl')?.value || '');
-      
+      formData.append(
+        'description',
+        this.movieForm.get('description')?.value || ''
+      );
+      formData.append(
+        'posterUrl',
+        this.movieForm.get('posterUrl')?.value || ''
+      );
+
       // Append the video file
-      formData.append('videoFile', this.currentVideoFile, this.currentVideoFile.name);
+      formData.append(
+        'videoFile',
+        this.currentVideoFile,
+        this.currentVideoFile.name
+      );
 
       // Submit to service
       this.movieService.uploadMovie(formData).subscribe({
         next: (response) => {
           console.log('Movie uploaded successfully:', response);
-          alert(`Movie "${response.movie?.title || 'Unknown'}" added successfully!`);
+          alert(
+            `Movie "${response.movie?.title || 'Unknown'}" added successfully!`
+          );
           this.clearForm();
         },
         error: (error) => {
           console.error('Error uploading movie:', error);
           let errorMessage = 'Error uploading movie. ';
-          
+
           if (error.error?.error) {
             errorMessage += error.error.error;
           } else if (error.error?.errors) {
@@ -292,72 +346,34 @@ export class Upload implements OnInit, OnDestroy {
           } else {
             errorMessage += 'Please try again.';
           }
-          
+
           alert(errorMessage);
         },
         complete: () => {
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       let errorMessage = 'Please fix the following issues:\n';
-      
+
       if (!this.movieForm.valid) {
         errorMessage += '- Fill in all required fields\n';
       }
-      
+
       if (!this.currentVideoFile) {
         errorMessage += '- Upload a video file\n';
       }
-      
+
       alert(errorMessage);
     }
+
+    this.router.navigate(['/']);
   }
-
-  // Alternative method with upload progress (uncomment if you want to use progress tracking)
-  /*
-  onSubmitWithProgress() {
-    if (this.movieForm.valid && this.currentVideoFile && !this.isSubmitting) {
-      this.isSubmitting = true;
-      let uploadProgress = 0;
-
-      const formData = new FormData();
-      formData.append('title', this.movieForm.get('title')?.value || '');
-      formData.append('releaseYear', this.movieForm.get('releaseYear')?.value?.toString() || '');
-      formData.append('duration', this.movieForm.get('duration')?.value?.toString() || '');
-      formData.append('director', this.movieForm.get('director')?.value || '');
-      formData.append('description', this.movieForm.get('description')?.value || '');
-      formData.append('posterUrl', this.movieForm.get('posterUrl')?.value || '');
-      formData.append('videoFile', this.currentVideoFile, this.currentVideoFile.name);
-
-      this.movieService.uploadMovieWithProgress(formData).subscribe({
-        next: (event) => {
-          if (event.type === HttpEventType.UploadProgress && event.total) {
-            uploadProgress = Math.round(100 * event.loaded / event.total);
-            console.log(`Upload progress: ${uploadProgress}%`);
-          } else if (event.type === HttpEventType.Response) {
-            console.log('Movie uploaded successfully:', event.body);
-            alert('Movie added successfully!');
-            this.clearForm();
-          }
-        },
-        error: (error) => {
-          console.error('Error uploading movie:', error);
-          alert('Error uploading movie. Please try again.');
-          this.isSubmitting = false;
-        },
-        complete: () => {
-          this.isSubmitting = false;
-        }
-      });
-    }
-  }
-  */
 
   clearForm() {
     this.movieForm.reset();
     this.clearUploadedFiles();
-    
+
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
@@ -374,7 +390,6 @@ export class Upload implements OnInit, OnDestroy {
     }
   }
 
-  // Make formatFileSize accessible from template
   formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
