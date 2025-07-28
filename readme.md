@@ -16,7 +16,6 @@
 - 🎥 **Movie Management**: Complete CRUD operations for movie collection
 - 📁 **File Upload**: Support for video file uploads and storage
 - 🎬 **Video Streaming**: Built-in video player with HTML5 video tag
-- 🔍 **Movie Discovery**: Browse and search through your movie library
 - 📱 **Responsive Design**: Netflix-inspired UI that works on all devices
 - ⚡ **Real-time Updates**: Seamless user experience with loading indicators
 - 🔐 **API-First Architecture**: RESTful API design for maximum flexibility
