@@ -172,9 +172,7 @@ export class Upload implements OnInit, OnDestroy {
       if (uploadedFile.progress >= 100) {
         uploadedFile.progress = 100;
         uploadedFile.status = 'completed';
-        // Create video preview URL when upload is complete
         this.createVideoPreview(uploadedFile.file);
-        // Hide the upload progress since we're showing the video preview now
         if (this.uploadedFiles) {
           this.uploadedFiles.nativeElement.style.display = 'none';
         }
@@ -296,10 +294,8 @@ export class Upload implements OnInit, OnDestroy {
     if (this.movieForm.valid && this.currentVideoFile && !this.isSubmitting) {
       this.isSubmitting = true;
 
-      // Create FormData object for file upload
       const formData = new FormData();
 
-      // Append form fields (using snake_case to match Django model fields)
       formData.append('title', this.movieForm.get('title')?.value || '');
       formData.append(
         'releaseYear',
@@ -319,14 +315,12 @@ export class Upload implements OnInit, OnDestroy {
         this.movieForm.get('posterUrl')?.value || ''
       );
 
-      // Append the video file
       formData.append(
         'videoFile',
         this.currentVideoFile,
         this.currentVideoFile.name
       );
 
-      // Submit to service
       this.movieService.uploadMovie(formData).subscribe({
         next: (response) => {
           console.log('Movie uploaded successfully:', response);

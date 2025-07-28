@@ -1,0 +1,127 @@
+<div class="edit-page">
+    <main class="main-content">
+        @if (isLoading()) {
+        <div class="loading-indicator">
+            <p>Loading movie details...</p>
+        </div>
+        }
+
+        @if (error) {
+        <div class="error-message">
+            <p>{{ error }}</p>
+        </div>
+        }
+
+        @if (!isLoading() && !error) {
+        <div>
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Edit Movie</h1>
+                <p class="page-subtitle">Update movie details and replace the video file if needed</p>
+            </div>
+
+            <!-- Current Video Section -->
+            <div class="current-video-section" *ngIf="currentMovie">
+                <div class="current-video-header">
+                    <h3 class="current-video-title">
+                        {{ hasNewVideo() ? 'New Movie File' : 'Current Movie File' }}
+                    </h3>
+                    <p class="current-video-subtitle">
+                        {{ hasNewVideo() ? 
+                        'This is the new video file you selected' : 'This is the current video file for this movie' }}
+                    </p>
+                </div>
+
+                <div class="video-preview-wrapper">
+                    <video #currentVideo [src]="getCurrentVideoUrl()" controls class="video-preview">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <!-- File Info Display -->
+                <div class="file-info-display">
+                    <div class="file-name">{{ getCurrentFileName() }}</div>
+                    <div class="file-size">{{ getCurrentFileSize() }}</div>
+                    @if (hasNewVideo()) {
+                        <div class="new-file-indicator">
+                            New file selected
+                        </div>
+                    }
+                </div>
+
+                <div class="video-actions">
+                    <button class="upload-btn" type="button" (click)="showUpload()">
+                        {{ hasNewVideo() ? 'Replace Again' : 'Replace Video' }}
+                    </button>
+                    <button class="btn-secondary" type="button" (click)="previewVideo()">Preview</button>
+                    @if (hasNewVideo()) {
+                        <button class="btn-danger-outline" type="button" (click)="clearNewVideo()">
+                            Remove New Video
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Upload Section (hidden by default) -->
+            <div class="upload-section" [class.show]="showUploadSection" [class.dragover]="isDragOver"
+                (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+                <div class="upload-area">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7,10 12,15 17,10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <h3 class="upload-title">{{ hasNewVideo() ? 'Replace Again' : 'Replace Movie File' }}</h3>
+                    <p class="upload-subtitle">Support for MP4, AVI, MKV, and other video formats up to 5GB</p>
+                    <div>
+                        <button class="upload-btn" type="button" (click)="triggerFileInput()">Choose Files</button>
+                        <button class="browse-btn" type="button" (click)="triggerFileInput()">Browse Computer</button>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn-secondary" type="button" (click)="hideUpload()">Cancel</button>
+                    </div>
+                    <input #fileInput type="file" class="file-input" accept="video/*" (change)="onFileSelected($event)">
+                </div>
+            </div>
+
+            <!-- Movie Details Form -->
+            <form class="movie-form" [formGroup]="movieForm" (ngSubmit)="onSubmit()">
+                <h2 class="form-title">Movie Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" placeholder="Enter movie title" formControlName="title"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Release Year</label>
+                        <input type="number" class="form-input" placeholder="2024" min="1900" max="2030"
+                            formControlName="releaseYear">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-input" placeholder="120" min="1" formControlName="duration">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Director</label>
+                        <input type="text" class="form-input" placeholder="Director name" formControlName="director">
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" placeholder="Enter movie description or synopsis" rows="4"
+                            formControlName="description"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <!-- <button type="button" class="btn-danger" (click)="deleteMovie()">Delete Movie</button> -->
+                    <button type="button" class="btn-secondary" (click)="cancelEdit()">Cancel</button>
+                    <button type="submit" class="btn-primary" [disabled]="!movieForm.valid">
+                        Update Movie
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        }
+    </main>
+</div>

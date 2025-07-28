@@ -27,19 +27,16 @@ class Movie(models.Model):
     processing_progress = models.IntegerField(default=0)  # 0-100
     processing_error = models.TextField(null=True, blank=True)
 
-    # Generated content
     thumbnail = models.ImageField(upload_to="thumbnails/", null=True, blank=True)
     hls_playlist = models.FileField(upload_to="hls/", null=True, blank=True)
     hls_folder = models.CharField(max_length=255, null=True, blank=True)
 
-    # Metadata
     year_released = models.IntegerField(null=True, blank=True)
     duration = models.IntegerField(null=True, blank=True)  # in seconds
     director = models.CharField(max_length=255, null=True, blank=True)
     poster_url = models.CharField(max_length=511, null=True, blank=True)
     poster_image = models.FileField(upload_to="images/", null=True, blank=True)
 
-    # Video metadata (extracted during processing)
     video_width = models.IntegerField(null=True, blank=True)
     video_height = models.IntegerField(null=True, blank=True)
     video_bitrate = models.IntegerField(null=True, blank=True)

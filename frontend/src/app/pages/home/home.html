@@ -30,7 +30,7 @@
 
         @if (selectedMovie(); as movie) {
         <app-movie-modal [isVisible]="isModalVisible" [movie]="movie" (closeModal)="closeModal()"
-            (deleteMovieRequest)="deleteMovieById($event)" />
+            (deleteMovieRequest)="deleteMovieById($event)" (updateMovieRequest)="updateMovieById($event)" />
         }
 
     </main>

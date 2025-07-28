@@ -122,4 +122,8 @@ export class Home implements OnInit, OnDestroy {
 
     this.loading = false;
   }
+
+  updateMovieById(movieId: number): void {
+    this.router.navigate(['/edit', movieId]);
+  }
 }

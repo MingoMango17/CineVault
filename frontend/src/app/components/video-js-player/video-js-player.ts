@@ -17,6 +17,7 @@ import videojs from 'video.js';
       #videoElement
       class="video-js vjs-default-skin"
       preload="auto"
+      loop
       [attr.width]="width"
       [attr.height]="height"
       [poster]="poster"

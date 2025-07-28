@@ -29,6 +29,7 @@ export class MovieModal {
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() deleteMovieRequest = new EventEmitter<number>();
+  @Output() updateMovieRequest = new EventEmitter<number>();
 
   onCloseModal(): void {
     this.closeModal.emit();
@@ -69,7 +70,6 @@ export class MovieModal {
   }
 
   playMovie(): void {
-
     if (this.videoPlayer && this.movie()?.video_file) {
       try {
         if (this.isPlayingVideo()) {
@@ -77,7 +77,7 @@ export class MovieModal {
         } else {
           this.videoPlayer.play();
         }
-        this.isPlayingVideo.update(value => !value);
+        this.isPlayingVideo.update((value) => !value);
       } catch (error) {
         console.error('Error playing video:', error);
         // You could show a user-friendly error message here
@@ -102,6 +102,14 @@ export class MovieModal {
         this.deleteMovieRequest.emit(movieToDelete.id);
         this.onCloseModal();
       }
+    }
+  }
+
+  updateMovie(): void {
+    const movieToUpdate = this.movie();
+    if (movieToUpdate) {
+      this.updateMovieRequest.emit(movieToUpdate.id);
+      this.onCloseModal();
     }
   }
 }

@@ -24,4 +24,11 @@ export const routes: Routes = [
     },
     canActivate: [authGuard],
   },
+  {
+    path: 'edit/:id',
+    loadComponent() {
+      return import('./pages/edit/edit').then((m) => m.Edit);
+    },
+    canActivate: [authGuard],
+  }
 ];

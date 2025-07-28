@@ -33,7 +33,7 @@ export class MovieService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`, // Use access token for auth
       // 'Content-Type': 'multipart/form-data'
-      'Accept': 'application/json',
+      Accept: 'application/json',
     });
     return this.http.post(`${this.apiUrl}/movies/`, formData, { headers }).pipe(
       map((response: any) => {
@@ -49,17 +49,33 @@ export class MovieService {
     });
   }
 
-  deleteMovieById(id:number) {
+  deleteMovieById(id: number) {
     const accessToken = localStorage.getItem('access_token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`, // Use access token for auth
       // 'Content-Type': 'multipart/form-data'
-      'Accept': 'application/json',
+      Accept: 'application/json',
     });
     return this.http.delete(`${this.apiUrl}/movies/${id}/`, { headers }).pipe(
       map((response: any) => {
         return response;
       })
     );
+  }
+
+  updateMovieById(id: number, formData: FormData) {
+    const accessToken = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+    });
+
+    return this.http
+      .put(`${this.apiUrl}/movies/${id}/`, formData, { headers })
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
   }
 }

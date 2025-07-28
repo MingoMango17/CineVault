@@ -390,3 +390,23 @@
     border-color: #e50914;
     color: #ffffff;
 }
+
+.btn-edit {
+    background: rgba(42, 42, 42, 0.8);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    background: rgba(219, 219, 219, 0.8); /* Red background on hover for delete */
+    border-color: #0c0909;
+    color: #ffffff;
+}
