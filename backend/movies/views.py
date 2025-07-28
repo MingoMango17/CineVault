@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate
@@ -12,6 +13,7 @@ from .serializers import *
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -24,6 +26,73 @@ class MovieViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        """
+        Override create method to handle file uploads
+        """
+        try:
+            # Extract data from request
+            title = request.data.get('title')
+            year_released = request.data.get('releaseYear')
+            duration = request.data.get('duration')
+            director = request.data.get('director')
+            description = request.data.get('description')
+            poster_url = request.data.get('posterUrl')
+            video_file = request.data.get('videoFile')
+
+            # Validate required fields
+            if not title:
+                return Response(
+                    {'error': 'Title is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            if not video_file:
+                return Response(
+                    {'error': 'Video file is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Prepare data for serializer
+            movie_data = {
+                'title': title,
+                'year_released': int(year_released) if year_released else None,
+                'duration': int(duration) if duration else None,
+                'director': director or '',
+                'description': description or '',
+                'poster_url': poster_url or '',
+                'video_file': video_file
+            }
+
+            serializer = self.get_serializer(data=movie_data)
+            
+            if serializer.is_valid():
+                movie = serializer.save()
+                
+                return Response(
+                    {
+                        'message': 'Movie created successfully',
+                        'movie': MovieDetailSerializer(movie).data
+                    },
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    {'errors': serializer.errors}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        except ValueError as e:
+            return Response(
+                {'error': f'Invalid data format: {str(e)}'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': f'An error occurred: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class SignupView(APIView):

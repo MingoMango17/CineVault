@@ -17,6 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from movies.urls import router as movie_router
 from movies.views import SignupView, SigninView, SignoutView
@@ -29,3 +31,6 @@ urlpatterns = [
     path("auth/signout", SignoutView.as_view(), name="sign-out"),
     path("admin/", admin.site.urls),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

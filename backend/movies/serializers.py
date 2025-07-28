@@ -4,17 +4,57 @@ from django.contrib.auth.models import User
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
+    video_file = serializers.FileField(required=True)
+
     class Meta:
         model = Movie
-        # fields = ["id", "title", "description", "date_added", "video_file", "date_released", "duration"]
-        fields = '__all__'
+        fields = [
+            "id",
+            "title",
+            "year_released",
+            "duration",
+            "director",
+            "description",
+            "poster_url",
+            "video_file",
+            "date_added",
+        ]
+
         read_only_fields = ["date_added"]
+
+    def validate_video_file(self, value):
+        """
+        Validate video file type and size
+        """
+        # Check file size (5GB limit)
+        max_size = 5 * 1024 * 1024 * 1024  # 5GB in bytes
+        if value.size > max_size:
+            raise serializers.ValidationError("File size cannot exceed 5GB.")
+
+        # Check file type
+        allowed_types = [
+            "video/mp4",
+            "video/avi",
+            "video/mkv",
+            "video/mov",
+            "video/wmv",
+        ]
+        if value.content_type not in allowed_types:
+            raise serializers.ValidationError("Only video files are allowed.")
+
+        return value
+
+    def create(self, validated_data):
+        """
+        Create a new movie instance with the uploaded video file
+        """
+        return Movie.objects.create(**validated_data)
 
 
 class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ["id", "title", "date_released"]
+        fields = ["id", "title", "year_released"]
 
 
 class SignupSerializer(serializers.ModelSerializer):

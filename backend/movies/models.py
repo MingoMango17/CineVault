@@ -12,7 +12,7 @@ class Movie(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=["mp4", "webm", "mkv"])],
     )
 
-    date_released = models.DateField(null=True, blank=True)
+    year_released = models.IntegerField(null=True, blank=True)
     duration = models.IntegerField(null=True, blank=True)
     director = models.CharField(max_length=255, null=True, blank=True)
     poster_url = models.CharField(max_length=511, null=True, blank=True)
