@@ -1,10 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, Output, EventEmitter, input, output } from '@angular/core';
 import { FullMovieDetails } from '../../model/movie.model';
+import { VideoJsPlayerComponent } from '../video-js-player/video-js-player';
 
 @Component({
   selector: 'app-movie-modal',
-  imports: [DatePipe],
+  imports: [DatePipe, VideoJsPlayerComponent],
   templateUrl: './movie-modal.html',
   styleUrl: './movie-modal.scss',
 })
@@ -42,13 +43,13 @@ export class MovieModal {
   }
 
   get releaseYear(): string {
-    if (!this.movie()?.date_released) return 'N/A';
-    return new Date(this.movie().date_released).getFullYear().toString();
+    if (!this.movie()?.year_released) return 'N/A';
+    return new Date(this.movie().year_released).getFullYear().toString();
   }
 
   get formattedReleaseDate(): string {
-    if (!this.movie()?.date_released) return 'N/A';
-    return new Date(this.movie().date_released).toLocaleDateString();
+    if (!this.movie()?.year_released) return 'N/A';
+    return new Date(this.movie().year_released).toLocaleDateString();
   }
   playMovie(): void {
     console.log('Play movie:', this.movie()?.title);

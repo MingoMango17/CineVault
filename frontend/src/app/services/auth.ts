@@ -104,7 +104,7 @@ export class AuthService {
 
   signOut(): Observable<any> {
     const refreshToken = localStorage.getItem(this.refreshToken);
-    const accessToken = localStorage.getItem(this.accessToken); // Get access token
+    const accessToken = localStorage.getItem(this.accessToken);
 
     if (!refreshToken) {
       this.clearAuthData();
@@ -113,7 +113,6 @@ export class AuthService {
       return of(true);
     }
 
-    // Create proper auth headers with access token
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`, // Use access token for auth
       'Content-Type': 'application/json',

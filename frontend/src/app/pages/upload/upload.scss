@@ -338,3 +338,151 @@
         flex-direction: column;
     }
 }
+
+/* Add these CSS rules to your existing upload.scss file */
+
+.video-uploaded-area {
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.upload-section.dragover .video-uploaded-area {
+    background: rgba(229, 9, 20, 0.1);
+    border: 2px dashed #e50914;
+}
+
+.video-preview-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.video-preview-wrapper {
+    margin: 24px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.video-preview {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    background: #000;
+}
+
+.file-info-display {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 24px 0;
+    text-align: center;
+}
+
+.file-info-display .file-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.file-info-display .file-size {
+    font-size: 14px;
+    color: #b3b3b3;
+}
+
+.video-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.video-actions .upload-btn,
+.video-actions .btn-secondary {
+    min-width: 140px;
+}
+
+/* Style for file progress display */
+.file-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.file-name {
+    color: white;
+    font-weight: 500;
+}
+
+.file-size {
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+.file-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 120px;
+}
+
+.progress-text {
+    color: #b3b3b3;
+    font-size: 12px;
+    text-align: right;
+}
+
+.remove-file-btn {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-file-btn:hover {
+    color: #e50914;
+    background: rgba(229, 9, 20, 0.1);
+}
+
+.remove-file-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .video-uploaded-area {
+        padding: 24px 16px;
+    }
+    
+    .video-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .video-actions .upload-btn,
+    .video-actions .btn-secondary {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .file-item {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .file-progress {
+        min-width: unset;
+        width: 100%;
+    }
+}

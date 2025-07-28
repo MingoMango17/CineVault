@@ -17,8 +17,8 @@ export class FullMovieDetails {
   title: string;
   description: string;
   date_added: string;
-  video_file: string | null;
-  date_released: string;
+  video_file: string;
+  year_released: string;
   duration: number;
   director?: string | null;
   poster_url?: string | null;
@@ -30,7 +30,7 @@ export class FullMovieDetails {
     this.description = '';
     this.date_added = '';
     this.video_file = '';
-    this.date_released = '';
+    this.year_released = '';
     this.duration = 0;
     this.director = '';
     this.poster_url = '';
