@@ -1,1 +1,3 @@
+media/
 media/videos
+celerybeat-schedule*

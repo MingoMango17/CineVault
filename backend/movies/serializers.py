@@ -5,6 +5,11 @@ from django.contrib.auth.models import User
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     video_file = serializers.FileField(required=True)
+    processing_status = serializers.CharField(read_only=True)
+    processing_progress = serializers.IntegerField(read_only=True)
+    processing_error = serializers.CharField(read_only=True)
+    thumbnail = serializers.ImageField(read_only=True)
+    hls_playlist = serializers.FileField(read_only=True)
 
     class Meta:
         model = Movie
@@ -18,38 +23,27 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             "poster_url",
             "video_file",
             "date_added",
+            "processing_status",
+            "processing_progress", 
+            "processing_error",
+            "thumbnail",
+            "hls_playlist",
+            "video_width",
+            "video_height",
+            "video_codec",
         ]
-
-        read_only_fields = ["date_added"]
+        read_only_fields = ["date_added", "processing_status", "processing_progress"]
 
     def validate_video_file(self, value):
-        """
-        Validate video file type and size
-        """
-        # Check file size (5GB limit)
-        max_size = 5 * 1024 * 1024 * 1024  # 5GB in bytes
+        max_size = 5 * 1024 * 1024 * 1024  # 5GB
         if value.size > max_size:
             raise serializers.ValidationError("File size cannot exceed 5GB.")
 
-        # Check file type
-        allowed_types = [
-            "video/mp4",
-            "video/avi",
-            "video/mkv",
-            "video/mov",
-            "video/wmv",
-        ]
+        allowed_types = ["video/mp4", "video/avi", "video/mkv", "video/mov", "video/wmv"]
         if value.content_type not in allowed_types:
             raise serializers.ValidationError("Only video files are allowed.")
-
+        
         return value
-
-    def create(self, validated_data):
-        """
-        Create a new movie instance with the uploaded video file
-        """
-        return Movie.objects.create(**validated_data)
-
 
 class MovieListSerializer(serializers.ModelSerializer):
     class Meta:

@@ -4,22 +4,21 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.decorators import action
 from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate
 from .models import Movie
 from .serializers import *
 
+from .tasks import process_video
+
 
 class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     parser_classes = [MultiPartParser, FormParser, JSONParser]
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return MovieListSerializer
-        return MovieDetailSerializer
-
+    serializer_class = MovieDetailSerializer
+    
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:
             permission_classes = [permissions.AllowAny]
@@ -28,71 +27,74 @@ class MovieViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
-        """
-        Override create method to handle file uploads
-        """
+        """Create movie and trigger background processing"""
         try:
-            # Extract data from request
-            title = request.data.get('title')
-            year_released = request.data.get('releaseYear')
-            duration = request.data.get('duration')
-            director = request.data.get('director')
-            description = request.data.get('description')
-            poster_url = request.data.get('posterUrl')
-            video_file = request.data.get('videoFile')
-
-            # Validate required fields
-            if not title:
-                return Response(
-                    {'error': 'Title is required'}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            
-            if not video_file:
-                return Response(
-                    {'error': 'Video file is required'}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            # Prepare data for serializer
+            # Extract and validate data
             movie_data = {
-                'title': title,
-                'year_released': int(year_released) if year_released else None,
-                'duration': int(duration) if duration else None,
-                'director': director or '',
-                'description': description or '',
-                'poster_url': poster_url or '',
-                'video_file': video_file
+                'title': request.data.get('title'),
+                'year_released': int(request.data.get('releaseYear')) if request.data.get('releaseYear') else None,
+                'duration': int(request.data.get('duration')) if request.data.get('duration') else None,
+                'director': request.data.get('director', ''),
+                'description': request.data.get('description', ''),
+                'poster_url': request.data.get('posterUrl', ''),
+                'video_file': request.data.get('videoFile')
             }
-
-            serializer = self.get_serializer(data=movie_data)
             
+            if not movie_data['title']:
+                return Response({'error': 'Title is required'}, status=status.HTTP_400_BAD_REQUEST)
+            if not movie_data['video_file']:
+                return Response({'error': 'Video file is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            serializer = self.get_serializer(data=movie_data)
             if serializer.is_valid():
                 movie = serializer.save()
-                
-                return Response(
-                    {
-                        'message': 'Movie created successfully',
-                        'movie': MovieDetailSerializer(movie).data
-                    },
-                    status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    {'errors': serializer.errors}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
 
-        except ValueError as e:
-            return Response(
-                {'error': f'Invalid data format: {str(e)}'}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
+                process_video.delay(movie.id)
+                
+                return Response({
+                    'message': 'Movie created successfully. Processing started.',
+                    'movie': MovieDetailSerializer(movie).data,
+                    'processing_status': 'started'
+                }, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                
         except Exception as e:
-            return Response(
-                {'error': f'An error occurred: {str(e)}'}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return Response({'error': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def processing_status(self, request, pk=None):
+        """Get processing status for a movie"""
+        movie = self.get_object()
+        return Response({
+            'id': movie.id,
+            'processing_status': movie.processing_status,
+            'processing_progress': movie.processing_progress,
+            'processing_error': movie.processing_error,
+            'thumbnail_ready': bool(movie.thumbnail),
+            'hls_ready': bool(movie.hls_playlist),
+        })
+    
+    @action(detail=True, methods=['post'])
+    def reprocess(self, request, pk=None):
+        """Reprocess a failed video"""
+        movie = self.get_object()
+        if movie.processing_status in [Movie.FAILED, Movie.COMPLETED]:
+            movie.processing_status = Movie.PENDING
+            movie.processing_progress = 0
+            movie.processing_error = None
+            movie.save()
+            
+            process_video.delay(movie.id)
+            
+            return Response({
+                'message': 'Reprocessing started',
+                'processing_status': movie.processing_status
+            })
+        else:
+            return Response({
+                'error': 'Movie is currently being processed'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SignupView(APIView):
