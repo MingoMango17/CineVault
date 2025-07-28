@@ -4,6 +4,12 @@
             @if (isSignIn()) {
             <h1>Sign In</h1>
 
+            @if (error) {
+            <div class="backend-error-message">
+                Invalid Credentials. Try Again.
+            </div>
+            }
+
             <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
                 <div class="form-group">
                     <input type="email" id="email" name="email" [(ngModel)]="loginData.email"
@@ -27,18 +33,14 @@
                     }
                 </div>
 
-                <button type="submit" class="sign-in-btn" [disabled]="loginForm.invalid">
-                    Sign In
+                <button type="submit" class="sign-in-btn" [disabled]="loginForm.invalid || loading">
+                    @if (loading) {
+                        Signing In...
+                    } @else {
+                        Sign In
+                    }
                 </button>
 
-                <!-- <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe">
-                        <span class="checkmark"></span>
-                        Remember me
-                    </label>
-                    <a href="#" class="help-link">Need help?</a>
-                </div> -->
             </form>
 
             <div class="form-footer">
@@ -46,13 +48,16 @@
                     New to CineVault?
                     <a href="#" class="sign-up-link" (click)="toggleMode($event)">Sign up now</a>
                 </p>
-                <!-- <p class="recaptcha-text">
-                    This page is protected by Google reCAPTCHA to ensure you're not a bot.
-                    <a href="#" class="learn-more">Learn more.</a>
-                </p> -->
             </div>
             } @else {
             <h1>Sign Up</h1>
+
+            @if (error) {
+            <div class="backend-error-message">
+                Failed to Register. Try again.
+            </div>
+            }
+
 
             <form (ngSubmit)="onSignUp()" #signupForm="ngForm">
                 <div class="form-group">
@@ -135,8 +140,12 @@
                 </div>
 
                 <button type="submit" class="sign-in-btn"
-                    [disabled]="signupData.password !== signupData.confirmPassword">
-                    Sign Up
+                    [disabled]="signupData.password !== signupData.confirmPassword || loading">
+                    @if (loading) {
+                        Creating Account...
+                    } @else {
+                        Sign Up
+                    }
                 </button>
             </form>
 
