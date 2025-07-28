@@ -14,8 +14,8 @@ import videojs from 'video.js';
   template: `
     <video
       #target
+      #videoElement
       class="video-js vjs-default-skin"
-      controls
       preload="auto"
       [attr.width]="width"
       [attr.height]="height"
@@ -48,9 +48,34 @@ export class VideoJsPlayerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Clean up the Video.js player to avoid  memory leaks
+    // Clean up the Video.js player to avoid memory leaks
     if (this.player) {
       this.player.dispose();
+    }
+  }
+
+  // Public methods to control the player
+  play(): void {
+    if (this.player) {
+      this.player.play();
+    }
+  }
+
+  pause(): void {
+    if (this.player) {
+      this.player.pause();
+    }
+  }
+
+  isPaused(): boolean {
+    return this.player ? this.player.paused() : true;
+  }
+
+  togglePlayPause(): void {
+    if (this.isPaused()) {
+      this.play();
+    } else {
+      this.pause();
     }
   }
 }

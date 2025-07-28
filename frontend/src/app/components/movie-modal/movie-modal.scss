@@ -370,3 +370,23 @@
 .modal-content::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.5);
 }
+
+.btn-delete {
+    background: rgba(42, 42, 42, 0.8);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+    background: rgba(229, 9, 20, 0.8); /* Red background on hover for delete */
+    border-color: #e50914;
+    color: #ffffff;
+}

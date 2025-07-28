@@ -48,4 +48,18 @@ export class MovieService {
       observe: 'events',
     });
   }
+
+  deleteMovieById(id:number) {
+    const accessToken = localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`, // Use access token for auth
+      // 'Content-Type': 'multipart/form-data'
+      'Accept': 'application/json',
+    });
+    return this.http.delete(`${this.apiUrl}/movies/${id}/`, { headers }).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

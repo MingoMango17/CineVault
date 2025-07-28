@@ -5,7 +5,7 @@
         <div class="modal-hero">
             <!-- <img class="hero-backdrop" [src]="posterImageUrl" [alt]="movie().title + ' Backdrop'"> -->
             <div class="video-player">
-                <app-video-js-player [src]="movie().video_file" [width]="640" [height]="320"/>
+                <app-video-js-player [src]="movie().video_file" [width]="640" [height]="320" />
             </div>
             <div class="hero-gradient"></div>
 
@@ -16,67 +16,43 @@
                 </svg>
             </button>
 
-            <!-- Hero Content -->
             <div class="hero-content">
                 <h1 class="movie-title">{{ movie().title }}</h1>
-
-                <!-- <div class="movie-meta">
-                    <span class="new-badge">New</span>
-                    <span class="seasons-info">3 Seasons</span>
-                    <span class="year">{{ releaseYear }}</span>
-                    <span class="rating-badge">HD</span>
-                    <span class="content-rating">TV-MA</span>
-                </div>
-
-                <div class="trending-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    #2 in TV Shows Today
-                </div> -->
-
                 <div class="action-buttons">
                     @if (movie().video_file) {
                     <button class="btn-play" (click)="playMovie()">
+                        @if (!isPlayingVideo()) {
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <polygon points="5,3 19,12 5,21"></polygon>
                         </svg>
                         Play
+                        }@else{
+                        <svg width="20" height="20"  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="25" y="20" width="15" height="60" fill="#333" rx="2" />
+                            <rect x="60" y="20" width="15" height="60" fill="#333" rx="2" />
+                        </svg>
+                        Pause
+                        }
                     </button>
                     }
-                    <button class="btn-add" (click)="addToList()">
+                    <button class="btn-delete" (click)="deleteMovie()" title="Delete">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                    </button>
-                    <button class="btn-like" (click)="likeMovie()" title="Like">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
+                            <polyline points="3,6 5,6 21,6"></polyline>
                             <path
-                                d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
+                                d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2">
                             </path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
                         </svg>
                     </button>
-                    <button class="btn-share" (click)="shareMovie()" title="Share">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <circle cx="18" cy="5" r="3"></circle>
-                            <circle cx="6" cy="12" r="3"></circle>
-                            <circle cx="18" cy="19" r="3"></circle>
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                        </svg>
-                    </button>
-                    <button class="btn-volume" title="Audio">
+                    <!-- <button class="btn-volume" title="Audio" (click)="toggleMute()">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                         </svg>
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -90,25 +66,6 @@
                         {{ movie().description || "" }}
                     </p>
                 </div>
-
-                <!-- Sidebar Info -->
-                <!-- <div class="sidebar-info">
-                    <div class="info-section">
-                        <p class="info-item">
-                            <span class="info-label">Cast:</span>
-                            <span class="info-value">{{ movie().director || 'Kento Kaku, Yosuke Eguchi, Tae Kimura' }},
-                                more</span>
-                        </p>
-                        <p class="info-item">
-                            <span class="info-label">Genres:</span>
-                            <span class="info-value">TV Dramas, Japanese, TV Thrillers</span>
-                        </p>
-                        <p class="info-item">
-                            <span class="info-label">This show is:</span>
-                            <span class="info-value">Dark, Suspenseful, Exiting</span>
-                        </p>
-                    </div>
-                </div> -->
             </div>
 
             <!-- Additional Details -->

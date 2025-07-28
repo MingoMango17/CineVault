@@ -4,6 +4,7 @@ import { MovieModal } from '../../components/movie-modal/movie-modal';
 import { MovieService } from '../../services/movie-service';
 import { Subject, takeUntil } from 'rxjs';
 import { FullMovieDetails, SimpleMovieDetails } from '../../model/movie.model';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   imports: [MovieCard, MovieModal],
@@ -19,6 +20,8 @@ export class Home implements OnInit, OnDestroy {
   isModalVisible = false;
   selectedMovie = signal<FullMovieDetails | null>(null);
   selectedMovieId: number | null = null;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.loadMovies();
@@ -44,7 +47,7 @@ export class Home implements OnInit, OnDestroy {
   loadMovies(): void {
     this.loading = true;
     this.error = '';
-    
+
     this.movieService
       .getMovies()
       .pipe(takeUntil(this.destroy$))
@@ -64,7 +67,7 @@ export class Home implements OnInit, OnDestroy {
   loadMovieById(movieId: number): void {
     this.loading = true;
     this.error = '';
-    
+
     // If you have a service method to get movie by ID:
     this.movieService
       .getMovieById(movieId)
@@ -81,12 +84,38 @@ export class Home implements OnInit, OnDestroy {
           console.error('Error loading movie:', error);
         },
       });
-    
+
+    this.isModalVisible = true;
+    this.loading = false;
+
     // Alternative: If you don't have the service method yet, use sample data:
     // setTimeout(() => {
     //   this.selectedMovie = this.sampleMovie;
     //   this.isModalVisible = true;
     //   this.loading = false;
     // }, 100);
+  }
+
+  deleteMovieById(movieId: number): void {
+    this.loading = true;
+    this.error = '';
+
+    this.movieService
+      .deleteMovieById(movieId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (movie) => {
+          console.log('deleted')
+          this.loading = false;
+          this.router.navigate([this.router.url]);
+        },
+        error: (error) => {
+          this.error = 'Failed to load movie details';
+          this.loading = false;
+          console.error('Error loading movie:', error);
+        },
+      });
+
+    this.loading = false;
   }
 }
